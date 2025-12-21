@@ -1,58 +1,202 @@
-body {
-  background: #0f172a;
-  font-family: sans-serif;
-  color: white;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.card {
-  width: 400px;
-  margin: 60px auto;
-  padding: 20px;
-  background: #020617;
-  border-radius: 12px;
-  box-shadow: 0 0 20px #000;
-}
-
-input, button {
+html, body {
   width: 100%;
-  padding: 10px;
-  margin: 6px 0;
-  border-radius: 8px;
-  border: none;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #0b1020, #020617 70%);
+  color: #e5e7eb;
+  overflow: hidden;
 }
 
-button {
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #1d4ed8;
-}
-
-.danger {
-  background: #dc2626;
-}
-
-pre {
-  background: #020617;
-  padding: 10px;
-  border-radius: 8px;
-  max-height: 200px;
-  overflow: auto;
-}
-
-.cookie {
+/* PARTICLES */
+#particles {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #020617;
-  padding: 15px;
-  border-radius: 10px;
+  inset: 0;
+  z-index: 0;
 }
 
-.hidden {
+/* CONTAINER */
+.login-container {
+  position: relative;
+  z-index: 2;
+  width: 92%;
+  max-width: 420px;
+  padding: 38px 28px;
+  border-radius: 22px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.08),
+    rgba(255,255,255,0.02)
+  );
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 
+    0 0 40px rgba(0,0,0,0.7),
+    inset 0 0 30px rgba(255,255,255,0.03);
+  animation: fadeUp .9s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* LOGO */
+.logo-container {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.logo {
+  width: 90px;
+  margin-bottom: 18px;
+  filter: drop-shadow(0 0 30px rgba(180,180,255,.4));
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(255,255,255,.2);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+/* FORM */
+.form-group {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.form-group i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: #9ca3af;
+}
+
+.form-control {
+  width: 100%;
+  padding: 14px 14px 14px 46px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.12);
+  color: white;
+  font-size: 14px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 2px rgba(147,197,253,.25);
+}
+
+/* BUTTONS (NO LOGIC CHANGE) */
+.btn-login,
+.btn-access {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .25s ease;
+}
+
+.btn-login {
+  background: linear-gradient(135deg,#4f46e5,#2563eb);
+  box-shadow: 0 10px 25px rgba(37,99,235,.35);
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+}
+
+.btn-access {
+  margin-top: 14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+.btn-access:hover {
+  background: rgba(255,255,255,.12);
+}
+
+/* FOOTER */
+.footer {
+  margin-top: 26px;
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* NOTIFICATION */
+.notification {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 0 25px rgba(0,0,0,.7);
+  transform: translateX(120%);
+  transition: .35s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  border-color: #22c55e;
+}
+
+.notification.error {
+  border-color: #ef4444;
+}
+
+/* LOADING */
+#loading-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(6px);
+  z-index: 99999;
   display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 6px solid rgba(255,255,255,.15);
+  border-top-color: #60a5fa;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .title { font-size: 26px; }
+  .login-container { padding: 30px 22px; }
 }

@@ -19,12 +19,50 @@
 
     <button class="danger" onclick="clearStorage()">Reset Config</button>
   </div>
-
   <script>
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+document.addEventListener('DOMContentLoaded', function () {
+    particleground(document.getElementById('particles'), {
+      dotColor: '#999999',
+      lineColor: '#777777',
+      minSpeedX: 0.1,
+      maxSpeedX: 0.3,
+      minSpeedY: 0.1,
+      maxSpeedY: 0.3,
+      density: 10000,
+      particleRadius: 3,
+    });
+  }, false);
+  </script>
+  <script>
+  function showNotif(teks, tipe="success") {
+    const notif = document.getElementById("notification");
+    const ntext = document.getElementById("notification-text");
+
+    notif.classList.remove("success", "error");
+    notif.classList.add(tipe);
+    
+    ntext.textContent = teks;
+    notif.classList.add("show");
+
+    setTimeout(() => notif.classList.remove("show"), 3000);
+}
+
+function showLoading() {
+    const el = document.getElementById("loading-bg");
+    el.style.display = "flex"; // Aktifkan flex saat dipanggil
+}
+
+function hideLoading() {
+    document.getElementById("loading-bg").style.display = "none";
+}
+async function LoadScreen() {
+    showLoading();
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    hideLoading();
+    }
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 const repo = localStorage.getItem('repo') || sessionStorage.getItem('repo');
 const file = localStorage.getItem('file') || sessionStorage.getItem('file');
-const raw = localStorage.getItem('raw') || sessionStorage.getItem('raw');
 
 const apiUrl = `https://api.github.com/repos/${repo}/contents/${file}`;
 
@@ -57,20 +95,28 @@ async function updateDB(newDB, msg) {
 
 function addUser() {
   if (!db.includes(number.value)) {
+    await LoadScreen()
+    showNotif(`Succes Add ${number.value}`, "success")
     db.push(number.value);
     updateDB(db, `add ${number.value}`);
   }
 }
 
 function delUser() {
+  await LoadScreen()
+  showNotif(`Succes Delete ${number.value}`, "success")
   updateDB(db.filter(x=>x!==number.value), `delete ${number.value}`);
 }
 
 function delAll() {
+  await LoadScreen()
+  showNotif("Succes Delete All", "success")
   updateDB([], 'delete all');
+  
 }
 
 function clearStorage() {
+  LoadScreen()
   localStorage.clear();
   sessionStorage.clear();
   location.href = 'index.html';
