@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="card">
+    <h2>📦 Database GitHub</h2>
+
+    <input id="number" placeholder="Nomor user">
+    <button onclick="addUser()">Add</button>
+    <button onclick="delUser()">Delete</button>
+    <button onclick="delAll()">Delete All</button>
+
+    <h3>📄 Isi Database</h3>
+    <pre id="db">Loading...</pre>
+
+    <button class="danger" onclick="clearStorage()">Reset Config</button>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    loadDB();
+  </script>
+</body>
+</html>

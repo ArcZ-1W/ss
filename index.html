@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Setup GitHub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="card">
+    <h2>🔐 Setup GitHub</h2>
+
+    <input id="token" placeholder="GitHub Token">
+    <input id="repo" placeholder="user/repo">
+    <input id="file" placeholder="number.json">
+    <input id="raw" placeholder="Raw GitHub URL">
+
+    <button onclick="saveConfig()">Lanjut</button>
+  </div>
+
+  <!-- Cookie Popup -->
+  <div id="cookie" class="cookie hidden">
+    <p>Simpan data agar tidak perlu input ulang?</p>
+    <button onclick="acceptCookie()">Accept</button>
+    <button onclick="rejectCookie()">Reject</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
