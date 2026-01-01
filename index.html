@@ -243,47 +243,4 @@
     }
   </script>
 </body>
-</html>    showLoading();
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    hideLoading();
-    }
-    
-  if (localStorage.getItem('save') === 'true') {
-  if (location.pathname.includes('index.html')) {
-    location.href = 'dashboard.html';
-  }
-}
-
-// SAVE CONFIG
-async function saveConfig() {
-  await LoadScreen()
-  showNotif("Succes Simpen data", "success")
-  window.tempConfig = {
-    token: token.value,
-    repo: repo.value,
-    file: file.value
-  };
-  document.getElementById('cookie').classList.remove('hidden');
-}
-
-function acceptCookie() {
-  await LoadScreen()
-  showNotif("Cookiee accepted...", "success")
-  Object.entries(window.tempConfig).forEach(([k,v])=>{
-    localStorage.setItem(k, v);
-  });
-  localStorage.setItem('save','true');
-  location.href = 'dashboard.html';
-}
-
-function rejectCookie() {
-  await LoadScreen()
-  showNotif("Cookiee not accepted...", "error")
-  Object.entries(window.tempConfig).forEach(([k,v])=>{
-    sessionStorage.setItem(k, v);
-  });
-  location.href = 'dashboard.html';
-}
-  </script>
-</body>
 </html>
