@@ -14,7 +14,6 @@
   --blue-light: #38bdf8;
   --blue-neon: #0ea5e9;
   --text-main: #e5e7eb;
-}
 
 /* ===== RESET & GLOBAL ===== */
 * {
@@ -78,15 +77,12 @@ h3 {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-/* ===== CARD (AMAN DARI HEADER FIX) ===== */
+
+/* ===== CARD ===== */
 .card {
-  align-content: center;
   width: 100%;
   max-width: 420px;
-
-  /* kunci: jarak aman dari header */
-  margin: calc(60px + 20px) auto 40px;
-
+  margin: 40px auto;
   background: linear-gradient(160deg, #020617, #020617ee);
   padding: 20px;
   border-radius: 16px;
@@ -419,13 +415,8 @@ body { padding-top: 70px; }
     <span>ArcZ -- DataConfig Dashboard</span>
   </div>
 
-  <button class="hamburger" id="hamburgerBtn">
-    <span></span><span></span><span></span>
-  </button>
 </header>
 
-<nav class="side-menu" id="sideMenu"></nav>
-<div class="menu-backdrop" id="menuBackdrop"></div>
 
 <div id="loading-bg">
   <div class="loading-circle"></div>
@@ -507,31 +498,6 @@ body { padding-top: 70px; }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/jnicol/particleground/jquery.particleground.min.js"></script>
 <script>
-fetch('listtools.json')
-  .then(r => r.json())
-  .then(data => {
-    const menu = document.getElementById('sideMenu');
-    data.tools.forEach(v => {
-      const [name, link] = v.split(',');
-      const a = document.createElement('a');
-      a.href = link.trim();
-      a.innerHTML = `<i class="fas fa-file-code"></i> ${name.trim()}`;
-      menu.appendChild(a);
-    });
-  });
-
-const btn = document.getElementById('hamburgerBtn');
-const menu = document.getElementById('sideMenu');
-const bg = document.getElementById('menuBackdrop');
-
-btn.onclick = () => {
-  menu.classList.toggle('active');
-  bg.classList.toggle('active');
-};
-bg.onclick = () => {
-  menu.classList.remove('active');
-  bg.classList.remove('active');
-};
 function pulang(url = 'index.html', delay) {
   document.body.innerHTML = `
   <style>
