@@ -78,12 +78,15 @@ h3 {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-
-/* ===== CARD ===== */
+/* ===== CARD (AMAN DARI HEADER FIX) ===== */
 .card {
+  align-content: center;
   width: 100%;
   max-width: 420px;
-  margin: 40px auto;
+
+  /* kunci: jarak aman dari header */
+  margin: calc(60px + 20px) auto 40px;
+
   background: linear-gradient(160deg, #020617, #020617ee);
   padding: 20px;
   border-radius: 16px;

@@ -1,6 +1,13 @@
 {
   "tools": [
-    "Home,apa.html",
-    "dlll,apalah.html"
+    "pinterest-downloader,pinterest-downloader.html",
+    "search-music,search-music.html",
+    "spam-ngl,spam-ngl.html",
+    "spam-telegram,spam-telegram.html",
+    "telegram-spam,telegram-spam.html",
+    "test-speed,test-speed.html",
+    "tiktok,tiktok.html",
+    "tiktok-downloader,tiktok-downloader.html",
+    "youtube-downloader,youtube-downloader.html"
   ]
 }
