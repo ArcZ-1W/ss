@@ -2,27 +2,429 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <title>Dashboard Add Database - ArcZ</title>
   <link rel="stylesheet" href="style.css">
-</head>
+  <style>
+:root {
+  --blue-dark: #020617;
+  --blue-mid: #0f172a;
+  --blue-soft: #1e3a8a;
+  --blue-light: #38bdf8;
+  --blue-neon: #0ea5e9;
+  --text-main: #e5e7eb;
+}
+
+/* ===== RESET & GLOBAL ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+/* ===== PARTICLES ===== */
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ===== LOADING ===== */
+#loading-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,.7);
+  backdrop-filter: blur(4px);
+  display: none;
+  z-index: 99;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loading-circle {
+  width: 70px;
+  height: 70px;
+  border: 6px solid rgba(56,189,248,.2);
+  border-top: 6px solid var(--blue-light);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== CARD ===== */
+.card {
+  width: 100%;
+  max-width: 420px;
+  margin: 40px auto;
+  background: linear-gradient(160deg, #020617, #020617ee);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--blue-soft);
+  box-shadow: 0 10px 30px rgba(0,0,0,.7);
+}
+
+h2, h3 {
+  text-align: center;
+}
+
+/* ===== INPUT ===== */
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  border-radius: 12px;
+  border: 1px solid var(--blue-soft);
+  background: var(--blue-dark);
+  color: #fff;
+  font-size: 16px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--blue-light);
+  box-shadow: 0 0 10px rgba(56,189,248,.4);
+}
+
+/* ===== BUTTON BASE ===== */
+button {
+  position: relative;
+  padding: 18px 48px;
+  font-size: 18px;
+  color: var(--blue-light);
+  background: transparent;
+  border: 2px solid var(--blue-light);
+  border-radius: 14px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: .4s;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  left: -120%;
+  width: 120%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(56,189,248,.9),
+    transparent
+  );
+  transition: .6s;
+}
+
+button:hover::before {
+  left: 120%;
+}
+
+button:hover {
+  background: var(--blue-light);
+  color: #020617;
+  box-shadow:
+    0 0 15px var(--blue-light),
+    0 0 40px var(--blue-light),
+    0 0 80px var(--blue-light);
+  transform: scale(1.05);
+}
+
+/* ===== BUTTON FULL ===== */
+.buttonf,
+.btn-full {
+  width: 100%;
+  border-color: var(--blue-neon);
+  color: var(--blue-neon);
+}
+
+.buttonf:hover,
+.btn-full:hover {
+  background: var(--blue-neon);
+  box-shadow:
+    0 0 15px var(--blue-neon),
+    0 0 40px var(--blue-neon);
+}
+
+/* ===== MODE BUTTON ===== */
+#modeBtn {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--blue-dark);
+  border: 1px solid var(--blue-soft);
+  color: var(--blue-light);
+}
+
+#modeBtn:hover {
+  background: var(--blue-soft);
+}
+
+/* ===== NOTIFICATION ===== */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  background: rgba(2,6,23,.95);
+  border: 1px solid var(--blue-soft);
+  color: #fff;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(100vw);
+  transition: transform .3s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  border-color: var(--blue-light);
+}
+
+.notification.error {
+  border-color: #ef4444;
+}
+
+/* ===== RESET FIXED ===== */
+.reset-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 0;
+  background: linear-gradient(135deg, #020617, #020617);
+  border-top: 2px solid #1e40af;
+  color: #93c5fd;
+  z-index: 50;
+}
+
+.reset-fixed:hover {
+  background: #1e3a8a;
+  box-shadow: 0 0 20px rgba(59,130,246,.6);
+}
+/* TAMBAHAN UI*/
+.danger {
+  border-color: #ef4444;
+  color: #fecaca;
+}
+
+.danger:hover {
+  background: #ef4444;
+  color: #020617;
+  box-shadow:
+    0 0 15px #ef4444,
+    0 0 40px #ef4444;
+}
+/* ===== POPUP BASE ===== */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+/* box popup */
+.popup-box {
+  background: var(--blue-dark);
+  border-radius: 16px;
+  padding: 20px;
+  width: 90%;
+  max-width: 360px;
+  border: 1px solid var(--blue-soft);
+  box-shadow: 0 0 30px rgba(56,189,248,.25);
+  animation: pop .25s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(.85); opacity: 0 }
+  to   { transform: scale(1); opacity: 1 }
+}
+
+/* ===== UTILITY ===== */
+.hidden {
+  display: none !important;
+}
+  </style>
+  </head>
 <body>
-  <div id="particles"></div>
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i> 
+    <span id="notification-text"></span>
+  </div>
+  
+<div id="loading-bg">
+  <div class="loading-circle"></div>
+</div>
   <div class="card">
-    <h2>📦 Database GitHub</h2>
+    <h2>Database GitHub Mu</h2>
+<div style="display:flex; gap:10px; align-items:center;">
+  <input id="number" placeholder="Nomor user" style="flex:1;">
+  <button type="button" id="modeBtn" onclick="toggleMode()"
+    style="padding:12px 14px; border-radius:12px; border:none; cursor:pointer;">
+     <i class="fas fa-keyboard"></i>
+  </button>
+</div>
+<button class="buttonf" onclick="addUser()">Add</button>
+    <br>
+    <br>
+<div style="display:flex; gap:10px;">
+<button class="btn-full" onclick="delUser()">
+  <i class="fas fa-trash"></i> Delete
+</button>
 
-    <input id="number" placeholder="Nomor user">
-    <button onclick="addUser()">Add</button>
-    <button onclick="delUser()">Delete</button>
-    <button onclick="delAll()">Delete All</button>
+<button class="btn-full danger" onclick="openDeleteAll()">
+  <i class="fas fa-triangle-exclamation"></i> Delete All
+</button>
+</div>
 
-    <h3>📄 Isi Database</h3>
+    <h3>Isi Database</h3>
     <pre id="db">Loading...</pre>
 
-    <button class="danger" onclick="clearStorage()">Reset Config</button>
   </div>
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-    particleground(document.getElementById('particles'), {
+<button class="reset-fixed" onclick="openResetPopup()">
+  <i class="fas fa-rotate-left"></i> Reset Config
+</button>
+<!--      <button class="danger" onclick="clearStorage()">Reset Config</button> -->
+<div id="deleteAllPopup" class="popup-overlay hidden">
+  <div class="popup-box">
+    <h3 style="color:#ef4444">Hapus Semua Data?</h3>
+    <p style="font-size:14px; opacity:.8">
+      Tindakan ini tidak bisa dibatalkan.
+    </p>
+
+  </div>
+</div>
+<div id="resetPopup" class="popup-overlay hidden">
+  <div class="popup-box">
+<h3>
+  <i class="fas fa-shield-halved"></i>
+  Konfirmasi Reset
+</h3>
+    <div style="display:flex; gap:10px; margin:15px 0;">
+      <input id="captchaText" readonly>
+<button onclick="generateCaptcha()">
+  <i class="fas fa-rotate-right"></i>
+</button>
+    </div>
+
+    <input id="captchaInput" placeholder="Jawaban">
+
+    <div style="display:flex; gap:10px; margin-top:15px;">
+      <button class="btn-full" onclick="confirmReset()">Reset</button>
+      <button class="btn-full" onclick="closeReset()">Batal</button>
+    </div>
+  </div>
+</div>
+
+  <div id="particles"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/jnicol/particleground/jquery.particleground.min.js"></script>
+<script>
+let numberOnly = false;
+const input = document.getElementById('number');
+
+function toggleMode() {
+  numberOnly = !numberOnly;
+
+  document.getElementById('modeBtn').innerHTML =
+    numberOnly
+      ? '<i class="fas fa-lock"></i>'
+      : '<i class="fas fa-keyboard"></i>';
+
+  showNotif(
+    numberOnly ? 'Mode angka aktif' : 'Mode bebas aktif',
+    'success'
+  );
+
+  if (numberOnly) sanitizeNumber();
+}
+
+function sanitizeNumber() {
+  input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+// realtime filter
+input.addEventListener('input', () => {
+  if (numberOnly) sanitizeNumber();
+});
+let captchaAnswer = 0;
+
+function generateCaptcha() {
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
+  captchaAnswer = a + b;
+
+  document.getElementById('captchaText').value = `${a} + ${b} = ?`;
+  document.getElementById('captchaInput').value = '';
+}
+function openDeleteAll() {
+  if (db.length === 0) {
+    showNotif("Database sudah kosong!", "error");
+    return;
+  }
+  document.getElementById('deleteAllPopup').classList.remove('hidden');
+}
+
+function closeDeleteAll() {
+  document.getElementById('deleteAllPopup').classList.add('hidden');
+}
+
+async function confirmDeleteAll() {
+  closeDeleteAll();
+  showLoading();
+  await new Promise(r => setTimeout(r, 700));
+
+  db = [];
+  await saveDB("delete all");
+
+  hideLoading();
+  showNotif("Semua data dihapus!", "success");
+}
+async function openResetPopup() {
+  showLoading();
+  await new Promise(r => setTimeout(r, 600));
+  hideLoading();
+
+  document.getElementById('resetPopup').classList.remove('hidden');
+  generateCaptcha();
+}
+
+function closeReset() {
+  document.getElementById('resetPopup').classList.add('hidden');
+}
+
+async function confirmReset() {
+  const val = document.getElementById('captchaInput').value;
+  if (parseInt(val) !== captchaAnswer) {
+    showNotif("Captcha salah!", "error");
+    generateCaptcha();
+    return;
+  }
+
+  await LoadScreen();
+  localStorage.clear();
+  sessionStorage.clear();
+  location.href = 'index.html';
+}
+  $(document).ready(function() {
+    $('#particles').particleground({
       dotColor: '#999999',
       lineColor: '#777777',
       minSpeedX: 0.1,
@@ -30,99 +432,175 @@ document.addEventListener('DOMContentLoaded', function () {
       minSpeedY: 0.1,
       maxSpeedY: 0.3,
       density: 10000,
-      particleRadius: 3,
+      particleRadius: 3
     });
-  }, false);
-  </script>
-  <script>
-  function showNotif(teks, tipe="success") {
-    const notif = document.getElementById("notification");
-    const ntext = document.getElementById("notification-text");
+  });
 
-    notif.classList.remove("success", "error");
-    notif.classList.add(tipe);
-    
-    ntext.textContent = teks;
-    notif.classList.add("show");
+  function showNotif(teks, tipe = "success") {
+  const notif = document.getElementById("notification");
+  const ntext = document.getElementById("notification-text");
+  const icon  = notif.querySelector("i");
 
-    setTimeout(() => notif.classList.remove("show"), 3000);
+  notif.className = "notification";
+  notif.classList.add(tipe, "show");
+  ntext.textContent = teks;
+if (tipe === "error") {
+  icon.className = "fas fa-circle-xmark";
+} else {
+  icon.className = "fas fa-circle-check";
 }
 
-function showLoading() {
-    const el = document.getElementById("loading-bg");
-    el.style.display = "flex"; // Aktifkan flex saat dipanggil
+  setTimeout(() => notif.classList.remove("show"), 3500);
 }
 
-function hideLoading() {
+  function showLoading() {
+    document.getElementById("loading-bg").style.display = "flex";
+  }
+  function hideLoading() {
     document.getElementById("loading-bg").style.display = "none";
-}
-async function LoadScreen() {
+  }
+  async function LoadScreen() {
     showLoading();
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(r => setTimeout(r, 800)); // lebih cepat, ga perlu 1.5 detik
     hideLoading();
-    }
-const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-const repo = localStorage.getItem('repo') || sessionStorage.getItem('repo');
-const file = localStorage.getItem('file') || sessionStorage.getItem('file');
+  }
+
+  // Ambil config dari storage
+  const token  = localStorage.getItem('token')  || sessionStorage.getItem('token');
+const repo   = localStorage.getItem('repo')   || sessionStorage.getItem('repo');
+const file   = localStorage.getItem('file')   || sessionStorage.getItem('file');
+const branch = localStorage.getItem('branch') || 'main';
 
 const apiUrl = `https://api.github.com/repos/${repo}/contents/${file}`;
 
 const headers = {
-  Authorization: `token ${token}`,
+  Authorization: `Bearer ${token}`,
   Accept: 'application/vnd.github.v3+json'
 };
 
+let db = [];
+let sha = '';
+
+  const output = document.getElementById('db');
 async function loadDB() {
-  const res = await fetch(apiUrl, { headers });
-  const json = await res.json();
-  const content = JSON.parse(atob(json.content));
-  window.sha = json.sha;
-  window.db = content.dbnya || [];
-  document.getElementById('db').textContent = window.db.join('\n');
-}
+  try {
+    const res = await fetch(apiUrl, { headers });
+    const text = await res.text();
 
-async function updateDB(newDB, msg) {
-  await fetch(apiUrl, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({
-      message: msg,
-      content: btoa(JSON.stringify({ dbnya: newDB }, null, 2)),
-      sha: window.sha
-    })
-  });
-  loadDB();
-}
+    if (!res.ok) {
+      let msg = `HTTP ${res.status}`;
+      try {
+        const j = JSON.parse(text);
+        msg += `: ${j.message}`;
+      } catch {}
+      throw new Error(msg);
+    }
 
-function addUser() {
-  if (!db.includes(number.value)) {
-    await LoadScreen()
-    showNotif(`Succes Add ${number.value}`, "success")
-    db.push(number.value);
-    updateDB(db, `add ${number.value}`);
+    const json = JSON.parse(text);
+    const content = JSON.parse(atob(json.content));
+
+    sha = json.sha;
+    db  = content.ArcZNewEraAntiCopas || [];
+
+    document.getElementById('db').textContent =
+      db.length ? db.join('\n') : 'Database Empty';
+
+  } catch (e) {
+    console.error(e);
+    showNotif('Gagal load: ' + e.message, 'error');
+    document.getElementById('db').textContent = 'Error';
   }
 }
 
-function delUser() {
-  await LoadScreen()
-  showNotif(`Succes Delete ${number.value}`, "success")
-  updateDB(db.filter(x=>x!==number.value), `delete ${number.value}`);
-}
+  async function saveDB(message) {
+  try {
+    const res = await fetch(apiUrl, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message,
+        content: btoa(unescape(encodeURIComponent(
+          JSON.stringify({ ArcZNewEraAntiCopas: db }, null, 2)
+        ))),
+        sha,
+        branch
+      })
+    });
 
-function delAll() {
-  await LoadScreen()
-  showNotif("Succes Delete All", "success")
-  updateDB([], 'delete all');
-  
-}
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message);
+    }
 
-function clearStorage() {
-  LoadScreen()
-  localStorage.clear();
-  sessionStorage.clear();
-  location.href = 'index.html';
+    await loadDB();
+  } catch (e) {
+    showNotif('Gagal simpan: ' + e.message, 'error');
+  }
 }
-    loadDB();
-  </script>
+  async function addUser() {
+    const val = input.value.trim();
+    if (!val) {
+      await LoadScreen();
+      showNotif("Masukkan nomor dulu!", "error");
+      return;
+    }
+    if (db.includes(val)) {
+      await LoadScreen();
+      showNotif(`Nomor ${val} sudah ada!`, "error");
+      input.value = "";
+      return;
+    }
+
+    await LoadScreen();
+    db.push(val);
+    showNotif(`Berhasil tambah: ${val}`, "success");
+    input.value = "";
+    await saveDB(`add ${val}`);
+  }
+
+  async function delUser() {
+    const val = input.value.trim();
+    if (!val) {
+      showNotif("Masukkan nomor dulu!", "error");
+      return;
+    }
+    if (!db.includes(val)) {
+      showNotif(`Nomor ${val} tidak ditemukan!`, "error");
+      input.value = "";
+      return;
+    }
+
+    await LoadScreen();
+    db = db.filter(x => x !== val);
+    showNotif(`Berhasil hapus: ${val}`, "success");
+    input.value = "";
+    await saveDB(`delete ${val}`);
+  }
+
+  async function delAll() {
+    if (db.length === 0) {
+      showNotif("Database sudah kosong!", "error");
+      return;
+    }
+    if (!confirm("Yakin hapus SEMUA data?")) return;
+
+    await LoadScreen();
+    db = [];
+    showNotif("Semua data dihapus!", "success");
+    await saveDB("delete all");
+  }
+
+  async function clearStorage() {
+    if (confirm("Reset config dan kembali ke halaman login?")) {
+      await LoadScreen();
+      localStorage.clear();
+      sessionStorage.clear();
+      location.href = 'index.html';
+    }
+  }
+
+  // Load saat halaman dibuka
+  loadDB();
+</script>
 </body>
 </html>
