@@ -304,11 +304,23 @@ button:hover {
 <!--      <button class="danger" onclick="clearStorage()">Reset Config</button> -->
 <div id="deleteAllPopup" class="popup-overlay hidden">
   <div class="popup-box">
-    <h3 style="color:#ef4444">Hapus Semua Data?</h3>
+    <h3 style="color:#ef4444">
+      <i class="fas fa-triangle-exclamation"></i>
+      Hapus Semua Data?
+    </h3>
+
     <p style="font-size:14px; opacity:.8">
       Tindakan ini tidak bisa dibatalkan.
     </p>
 
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button class="btn-full danger" onclick="confirmDeleteAll()">
+        <i class="fas fa-trash"></i> Hapus
+      </button>
+      <button class="btn-full" onclick="closeDeleteAll()">
+        <i class="fas fa-xmark"></i> Batal
+      </button>
+    </div>
   </div>
 </div>
 <div id="resetPopup" class="popup-overlay hidden">
