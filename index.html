@@ -1,246 +1,98 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setup GitHub</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"><style>
-    #loading-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(3px);
-      display: none;
-      z-index: 99;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: white;
-      font-size: 18px;
-    }
-
-    .loading-circle {
-      width: 70px; height: 70px;
-      border: 6px solid rgba(255,255,255,0.2);
-      border-top: 6px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .notification {
-      position: fixed;
-      top: 20px; right: 20px;
-      padding: 15px 20px;
-      border-radius: 8px;
-      background: rgba(40, 40, 40, 0.95);
-      border: 1px solid #666;
-      color: white;
-      z-index: 1000;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-      transform: translateX(100vw);
-      transition: transform 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .notification.show { transform: translateX(0); }
-    .notification.error { background: rgba(120, 0, 0, 0.9); border-color: #ff4444; }
-    .notification.success { background: rgba(0, 100, 0, 0.9); border-color: #44ff44; }
-
-    #particles {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
-      pointer-events: none; /* Biar input bisa diketik */
-    }
-
-    * { box-sizing: border-box }
-    body {
-      margin: 0;
-      font-family: system-ui;
-      background: linear-gradient(135deg,#020617,#0f172a);
-      color: #e5e7eb;
-      min-height: 100vh;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 420px;
-      margin: 40px auto;
-      background: #020617;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.7);
-    }
-
-    h2 { text-align:center }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      margin: 8px 0;
-      border-radius: 12px;
-      border: 1px solid #1e293b;
-      background: #020617;
-      color: white;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 8px;
-      border-radius: 14px;
-      border: none;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:active { transform: scale(.97) }
-
-    .cookie {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 420px;
-      background: #020617;
-      padding: 16px;
-      border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.7);
-      text-align: center;
-    }
-
-    .hidden { display:none }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login ArcZ</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+/* === THEME SAMA === */
+body{
+  margin:0;
+  font-family:system-ui;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#e5e7eb;
+  min-height:100vh;
+}
+.card{
+  max-width:400px;
+  margin:80px auto;
+  background:#020617;
+  padding:20px;
+  border-radius:16px;
+  border:1px solid #1e3a8a;
+  box-shadow:0 10px 30px rgba(0,0,0,.7);
+}
+input,button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border-radius:12px;
+}
+input{
+  background:#020617;
+  border:1px solid #1e3a8a;
+  color:white;
+}
+button{
+  background:#38bdf8;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+}
+.captcha{
+  display:flex;
+  gap:10px;
+}
+</style>
 </head>
 <body>
 
-  <!-- Loading Screen -->
-  <div id="loading-bg">
-    <div class="loading-circle"></div>
-    Loading...
+<div class="card">
+  <h2 style="text-align:center">🔐 Login ArcZ</h2>
+
+  <input id="token" placeholder="GitHub Token">
+  <input id="password" type="password" placeholder="Password">
+
+  <div class="captcha">
+    <input id="captchaText" readonly>
+    <button onclick="genCaptcha()"><i class="fas fa-rotate"></i></button>
   </div>
 
-  <!-- Notification -->
-  <div id="notification" class="notification">
-    <span id="notification-text"></span>
-  </div>
-
-  <div class="card">
-    <h2>🔐 Setup GitHub</h2>
-    <input id="token" type="password" placeholder="GitHub Token">
-    <input id="repo" placeholder="user/repo">
-    <input id="file" placeholder="number.json">
-    <button onclick="saveConfig()">Lanjut</button>
-  </div>
-
-  <!-- Cookie Popup -->
-  <div id="cookie" class="cookie hidden">
-    <p>Simpan data agar tidak perlu input ulang?</p>
-    <button onclick="acceptCookie()">Accept</button>
-    <button onclick="rejectCookie()">Reject</button>
-  </div>
-
-  <!-- Particles Background -->
-  <div id="particles"></div>
-  <div id="notification" class="notification">
-    <i class="fas fa-check-circle"></i> 
-    <span id="notification-text"></span>
-  </div>
-  
-<div id="loading-bg">
-  <div class="loading-circle"></div>
+  <input id="captchaInput" placeholder="Jawaban Captcha">
+  <button onclick="login()">LOGIN</button>
 </div>
-  <!-- jQuery & Particleground -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jnicol/particleground/jquery.particleground.min.js"></script>
 
-  <script>
-    // Inisialisasi particles dengan benar (pakai jQuery)
-    $(document).ready(function() {
-      $('#particles').particleground({
-        dotColor: '#999999',
-        lineColor: '#777777',
-        minSpeedX: 0.1,
-        maxSpeedX: 0.3,
-        minSpeedY: 0.1,
-        maxSpeedY: 0.3,
-        density: 10000,
-        particleRadius: 3
-      });
-    });
+<script>
+const FIX_TOKEN = "arczsukamakanmakanansukikebiritbirit";
+const FIX_PASSWORD = "1";
 
-    // Redirect kalau sudah save
-    if (localStorage.getItem('save') === 'true' && !location.pathname.includes('dashboard')) {
-      location.href = 'dashboard.html';
-    }
+function login(){
+  const t = token.value.trim();
+  const p = password.value.trim();
+  const c = captchaInput.value.trim();
 
-    // Notifikasi
-    function showNotif(teks, tipe = "success") {
-      const notif = document.getElementById("notification");
-      const ntext = document.getElementById("notification-text");
-      notif.className = "notification"; // reset class
-      notif.classList.add(tipe, "show");
-      ntext.textContent = teks;
-      setTimeout(() => notif.classList.remove("show"), 3000);
-    }
+  if(!t || !p){
+    alert("Isi semua field!");
+    return;
+  }
 
-    // Loading
-    function showLoading() {
-      document.getElementById("loading-bg").style.display = "flex";
-    }
-    function hideLoading() {
-      document.getElementById("loading-bg").style.display = "none";
-    }
-    async function LoadScreen() {
-      showLoading();
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      hideLoading();
-    }
+  if(c !== captcha){
+    alert("Captcha salah!");
+    genCaptcha();
+    return;
+  }
 
-    // Save config
-    async function saveConfig() {
-      await LoadScreen();
-      showNotif("Success simpan data!", "success");
+  if(t !== FIX_TOKEN || p !== FIX_PASSWORD){
+    alert("Token atau Password salah!");
+    return;
+  }
 
-      window.tempConfig = {
-        token: document.getElementById('token').value.trim(),
-        repo: document.getElementById('repo').value.trim(),
-        file: document.getElementById('file').value.trim()
-      };
-
-      if (!window.tempConfig.token || !window.tempConfig.repo || !window.tempConfig.file) {
-        showNotif("Isi semua field dulu!", "error");
-        return;
-      }
-
-      document.getElementById('cookie').classList.remove('hidden');
-    }
-
-    async function acceptCookie() {
-      await LoadScreen();
-      showNotif("Data disimpan permanen!", "success");
-      Object.entries(window.tempConfig).forEach(([k, v]) => localStorage.setItem(k, v));
-      localStorage.setItem('save', 'true');
-      location.href = 'dashboard.html';
-    }
-
-    async function rejectCookie() {
-      await LoadScreen();
-      showNotif("Data hanya sementara", "error");
-      Object.entries(window.tempConfig).forEach(([k, v]) => sessionStorage.setItem(k, v));
-      location.href = 'dashboard.html';
-    }
-  </script>
+  // LOGIN SUCCESS
+  localStorage.setItem("login","true");
+  localStorage.setItem("token", t); // token github dipakai dashboard
+  location.href = "awal.html";
+}
+</script>
 </body>
 </html>
