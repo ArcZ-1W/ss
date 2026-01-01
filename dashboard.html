@@ -304,6 +304,105 @@ button:hover {
 .hidden {
   display: none !important;
 }
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+  border-bottom: 1px solid var(--blue-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  box-shadow: 0 5px 20px rgba(0,0,0,.6);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blue-light);
+  font-weight: 600;
+}
+
+/* ===== HAMBURGER ===== */
+.hamburger {
+  width: 42px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--blue-soft);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px;
+}
+
+.hamburger span {
+  height: 2px;
+  background: var(--blue-light);
+  border-radius: 2px;
+  transition: .3s;
+}
+
+/* ===== SIDE MENU ===== */
+.side-menu {
+  position: fixed;
+  top: 0; right: -260px;
+  width: 240px;
+  height: 100vh;
+  background: linear-gradient(160deg, var(--blue-dark), var(--blue-mid));
+  border-left: 1px solid var(--blue-soft);
+  padding: 80px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: .4s ease;
+  z-index: 120;
+}
+
+.side-menu a {
+  text-decoration: none;
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--blue-soft);
+  background: rgba(2,6,23,.6);
+}
+
+.side-menu a:hover {
+  background: var(--blue-soft);
+  box-shadow: 0 0 15px rgba(56,189,248,.4);
+}
+
+.danger-link {
+  border-color: #ef4444;
+  color: #fecaca;
+}
+
+/* ===== BACKDROP ===== */
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: .3s;
+  z-index: 110;
+}
+
+/* ===== ACTIVE ===== */
+.side-menu.active { right: 0; }
+.menu-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* kasih jarak konten karena header */
+body { padding-top: 70px; }
   </style>
   </head>
 <body>
@@ -311,7 +410,20 @@ button:hover {
     <i class="fas fa-check-circle"></i> 
     <span id="notification-text"></span>
   </div>
-  
+  <header class="topbar">
+  <div class="brand">
+    <i class="fas fa-database"></i>
+    <span>ArcZ -- DataConfig Dashboard</span>
+  </div>
+
+  <button class="hamburger" id="hamburgerBtn">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav class="side-menu" id="sideMenu"></nav>
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
 <div id="loading-bg">
   <div class="loading-circle"></div>
 </div>
@@ -392,6 +504,89 @@ button:hover {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/jnicol/particleground/jquery.particleground.min.js"></script>
 <script>
+fetch('listtools.json')
+  .then(r => r.json())
+  .then(data => {
+    const menu = document.getElementById('sideMenu');
+    data.tools.forEach(v => {
+      const [name, link] = v.split(',');
+      const a = document.createElement('a');
+      a.href = link.trim();
+      a.innerHTML = `<i class="fas fa-file-code"></i> ${name.trim()}`;
+      menu.appendChild(a);
+    });
+  });
+
+const btn = document.getElementById('hamburgerBtn');
+const menu = document.getElementById('sideMenu');
+const bg = document.getElementById('menuBackdrop');
+
+btn.onclick = () => {
+  menu.classList.toggle('active');
+  bg.classList.toggle('active');
+};
+bg.onclick = () => {
+  menu.classList.remove('active');
+  bg.classList.remove('active');
+};
+function pulang(url = 'index.html', delay) {
+  document.body.innerHTML = `
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .circles {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .circle {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 20px #5ed7ff;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+    .circle:nth-child(2){background: #0ea5e9; animation-delay:.3s}
+    .circle:nth-child(3){background: #008cbc; animation-delay:.6s}
+    @keyframes bounce {
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-40px)}
+    }
+    .text {
+      color: cyan;
+      font-size: 20px;
+      text-shadow: 0 0 10px cyan;
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { opacity: .6 }
+      to   { opacity: 1 }
+    }
+  </style>
+
+  <div class="circles">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+  <div class="text">Menyiapkan semua...</div>
+  `;
+
+  setTimeout(() => {
+    location.href = url;
+  }, delay);
+}
 let numberOnly = false;
 const input = document.getElementById('number');
 
@@ -473,7 +668,7 @@ async function confirmReset() {
     return;
   }
 
-  await LoadScreen();
+  await pulang('index.html', 15000)
   localStorage.clear();
   sessionStorage.clear();
   location.href = 'index.html';
