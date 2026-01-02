@@ -24,7 +24,7 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.7);
 }
 input,button{
-  width:100%;
+  width:90%;
   padding:14px;
   margin-top:10px;
   border-radius:12px;
@@ -40,19 +40,57 @@ button{
   font-weight:600;
   cursor:pointer;
 }
+buutton{
+  width: 10%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius:10px;
+  background:#00516e;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+}
 .captcha{
   display:flex;
   gap:10px;
+}
+#loading-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,.7);
+  backdrop-filter: blur(4px);
+  display: none;
+  z-index: 99;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loading-circle {
+  width: 70px;
+  height: 70px;
+  border: 6px solid rgba(56,189,248,.2);
+  border-top: 6px solid var(--blue-light);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
 </head>
 <body>
 
+<div id="loading-bg">
+  <div class="loading-circle"></div>
+</div>
+
 <div class="card">
   <h2 style="text-align:center">🔐 Login ArcZ</h2>
 
-  <input id="token" placeholder="GitHub Token">
-  <input id="password" type="password" placeholder="Password">
+  <input id="token" placeholder="Login Token">
+  <input id="password" type="password" placeholder="Pw pv @arcznewera">
 
   <div class="captcha">
     <input id="captchaText" readonly>
@@ -60,12 +98,24 @@ button{
   </div>
 
   <input id="captchaInput" placeholder="Jawaban Captcha">
-  <button onclick="login()">LOGIN</button>
+  <button style="text-align:center" onclick="login()">LOGIN</button>
 </div>
 
 <script>
+function showLoading() {
+    document.getElementById("loading-bg").style.display = "flex";
+  }
+  function hideLoading() {
+    document.getElementById("loading-bg").style.display = "none";
+  }
+  async function LoadScreen() {
+    showLoading();
+    await new Promise(r => setTimeout(r, 800)); // lebih cepat, ga perlu 1.5 detik
+    hideLoading();
+  }
 const FIX_TOKEN = "arczsukamakanmakanansukikebiritbirit";
 const FIX_PASSWORD = "1";
+
 let captchaAnswer = 0;
 
 function generateCaptcha() {
@@ -76,33 +126,92 @@ function generateCaptcha() {
   document.getElementById('captchaText').value = `${a} + ${b} = ?`;
   document.getElementById('captchaInput').value = '';
 }
-function login(){
-  generateCaptcha()
+function pulang(url, delay) {
+  document.body.innerHTML = `
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .circles {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .circle {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 20px #5ed7ff;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+    .circle:nth-child(2){background: #0ea5e9; animation-delay:.3s}
+    .circle:nth-child(3){background: #008cbc; animation-delay:.6s}
+    @keyframes bounce {
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-40px)}
+    }
+    .text {
+      color: cyan;
+      font-size: 20px;
+      text-shadow: 0 0 10px cyan;
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { opacity: .6 }
+      to   { opacity: 1 }
+    }
+  </style>
+
+  <div class="circles">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+  <div class="text">Menyiapkan semua...</div>
+  `;
+
+  setTimeout(() => {
+    location.href = url;
+  }, delay);
+}
+async function login(){
   const t = token.value.trim();
   const p = password.value.trim();
-  const c = captchaInput.value.trim();
+  const val = captchaInput.value.trim();
 
   if(!t || !p){
     alert("Isi semua field!");
     return;
   }
-
-  if(c !== captchaAnswer){
-    alert("Captcha salah!");
-    genCaptcha();
-    return;
-  }
-
   if(t !== FIX_TOKEN || p !== FIX_PASSWORD){
     alert("Token atau Password salah!");
     return;
   }
+  
+  if (parseInt(val) !== captchaAnswer) {
+    alert("Captcha salah!");
+    generateCaptcha();
+    return;
+  }
 
   // LOGIN SUCCESS
-  localStorage.setItem("login","true");
-  localStorage.setItem("token", t); // token github dipakai dashboard
-  location.href = "awal.html";
+  await LoadScreen()
+  await localStorage.setItem("login","true");
+  await pulang("awal.html", "12000")
 }
+
+// generate pertama kali
+generateCaptcha();
 </script>
 </body>
 </html>
