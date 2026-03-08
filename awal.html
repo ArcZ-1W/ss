@@ -167,14 +167,6 @@
 <button style="margin-top:10px;background:#ef4444"
 onclick="logout()">Logout</button>
   <script>
-function logout(){
-  localStorage.clear();
-  sessionStorage.clear();
-  location.href="index.html";
-}
-   if(localStorage.getItem("login")!=="true"){
-  location.href="index.html";
-}
  // Inisialisasi particles dengan benar (pakai jQuery)
     $(document).ready(function() {
       $('#particles').particleground({
@@ -190,10 +182,7 @@ function logout(){
     });
 
     // Redirect kalau sudah save
-    if (localStorage.getItem('save') === 'true' && !location.pathname.includes('dashboard')) {
-      location.href = 'dashboard.html';
-    }
-
+   
     // Notifikasi
     function showNotif(teks, tipe = "success") {
       const notif = document.getElementById("notification");
